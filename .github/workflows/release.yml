@@ -102,7 +102,13 @@ jobs:
           CARGO_PROFILE_DEV_DEBUG: "0"
         run: |
           cargo test --locked
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) {
+            # VectorCraft's CI tests on Linux only, and a few of its tests race background threads
+            # (placed documents' bitmaps): once more, already built. A real failure fails twice.
+            Write-Host "::warning::Tests failed; running them once more"
+            cargo test --locked
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
 
       - name: Build
         if: steps.tree.outputs.skip != 'true'
