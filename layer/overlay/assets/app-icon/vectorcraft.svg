@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Illostrator</title>
+  <defs>
+    <clipPath id="tile">
+      <rect width="512" height="512" rx="112"/>
+    </clipPath>
+    <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff4e4"/>
+      <stop offset="1" stop-color="#ffd8c4"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect width="512" height="512" fill="url(#field)"/>
+    <!-- A lightning bolt behind her. -->
+    <path d="M420 40 L 350 190 L 400 190 L 330 330 L 470 160 L 412 160 L 470 40 Z" fill="#ffd23f" stroke="#f08c1e" stroke-width="5" stroke-linejoin="round"/>
+    <!-- Body in a black leather jacket, the purple chest showing through the lapels. -->
+    <path d="M142 300 C 118 380 110 460 118 540 L 332 540 C 340 460 330 380 306 300 Z" fill="#3d2e57" stroke="#5c4785" stroke-width="4"/>
+    <path d="M196 300 L 224 400 L 252 300 Z" fill="#8b3dff"/>
+    <path d="M150 304 L 196 300 L 214 372 Z M 298 304 L 252 300 L 234 372 Z" fill="#54417a"/>
+    <!-- Ears and head. -->
+    <path d="M118 182 L 124 72 L 200 126 Z M 330 182 L 324 72 L 248 126 Z" fill="#8b3dff"/>
+    <path d="M136 162 L 140 102 L 182 130 Z M 312 162 L 308 102 L 266 130 Z" fill="#ff8fb5"/>
+    <path d="M106 222 C 106 150 158 112 224 112 C 290 112 342 150 342 222 C 342 288 292 324 224 324 C 156 324 106 288 106 222 Z" fill="#8b3dff"/>
+    <!-- A yellow crown of a mohawk. -->
+    <path d="M176 126 L 186 70 L 204 112 L 224 56 L 244 112 L 262 70 L 272 126 C 240 116 208 116 176 126 Z" fill="#ffd23f"/>
+    <!-- Sunglasses. -->
+    <g fill="#120d1c">
+      <rect x="136" y="184" width="74" height="48" rx="20"/>
+      <rect x="238" y="184" width="74" height="48" rx="20"/>
+      <rect x="204" y="194" width="40" height="10" rx="5"/>
+    </g>
+    <path d="M150 198 L 168 196 M 252 198 L 270 196" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+    <!-- Nose, mouth, whiskers. -->
+    <path d="M212 248 L 236 248 L 224 262 Z" fill="#ff8fb5"/>
+    <path d="M202 270 C 210 282 222 280 224 268 C 226 280 238 282 246 270" fill="none" stroke="#2a1040" stroke-width="5" stroke-linecap="round"/>
+    <g stroke="#3d1580" stroke-width="4" stroke-linecap="round">
+      <path d="M150 258 L 96 250 M 152 272 L 98 278"/>
+      <path d="M298 258 L 352 250 M 296 272 L 350 278"/>
+    </g>
+    <!-- The guitar, its body outline drawn as a vector path: anchors and Bezier handles showing. -->
+    <g transform="translate(232 432) rotate(-28)">
+      <rect x="80" y="-11" width="190" height="22" rx="4" fill="#3b2a20"/>
+      <path d="M262 -16 L 318 -22 C 326 -22 330 -16 330 -8 L 330 8 C 330 16 326 22 318 22 L 262 16 Z" fill="#3b2a20"/>
+      <path d="M-112 0 C -112 -52 -78 -72 -38 -62 C -14 -56 -2 -44 24 -46 C 52 -48 70 -82 98 -72 C 116 -64 104 -40 92 -24 C 120 -8 120 26 92 40 C 104 58 112 82 92 88 C 62 96 44 56 18 54 C -14 52 -30 72 -62 70 C -100 66 -112 40 -112 0 Z" fill="#ff4f7b" stroke="#2a1d4a" stroke-width="5" stroke-linejoin="round"/>
+      <rect x="-26" y="-30" width="18" height="60" rx="4" fill="#120d1c"/>
+      <rect x="14" y="-30" width="18" height="60" rx="4" fill="#120d1c"/>
+      <rect x="-80" y="-24" width="12" height="48" rx="3" fill="#120d1c"/>
+      <g stroke="#e8e0f5" stroke-width="2">
+        <line x1="-74" y1="-9" x2="320" y2="-9"/>
+        <line x1="-74" y1="-3" x2="320" y2="-3"/>
+        <line x1="-74" y1="3" x2="320" y2="3"/>
+        <line x1="-74" y1="9" x2="320" y2="9"/>
+      </g>
+      <g stroke="#2a1d4a" stroke-width="3" fill="#2a1d4a">
+        <line x1="-112" y1="0" x2="-112" y2="-40"/><circle cx="-112" cy="-40" r="6"/>
+        <line x1="-112" y1="0" x2="-112" y2="40"/><circle cx="-112" cy="40" r="6"/>
+        <line x1="92" y1="40" x2="120" y2="26"/><circle cx="120" cy="26" r="6"/>
+        <line x1="92" y1="40" x2="104" y2="58"/><circle cx="104" cy="58" r="6"/>
+      </g>
+      <g fill="#ffffff" stroke="#2a1d4a" stroke-width="4">
+        <rect x="-121" y="-9" width="18" height="18" rx="2"/>
+        <rect x="-47" y="-71" width="18" height="18" rx="2"/>
+        <rect x="89" y="-81" width="18" height="18" rx="2"/>
+        <rect x="83" y="31" width="18" height="18" rx="2"/>
+        <rect x="9" y="45" width="18" height="18" rx="2"/>
+      </g>
+    </g>
+    <!-- The fretting paw on the neck. -->
+    <ellipse cx="388" cy="364" rx="26" ry="22" fill="#8b3dff"/>
+    <!-- The strumming paw, a fountain-pen nib for a pick. -->
+    <g transform="translate(196 376) rotate(64)">
+      <path d="M8 -16 C 34 -16 60 -8 84 0 C 60 8 34 16 8 16 Z" fill="#f2b632" stroke="#120d1c" stroke-width="3"/>
+      <path d="M46 0 L 84 0" stroke="#120d1c" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="42" cy="0" r="5" fill="#120d1c"/>
+    </g>
+    <circle cx="196" cy="376" r="30" fill="#8b3dff"/>
+    <path d="M178 362 C 184 356 192 356 196 362 M 196 362 C 200 356 208 356 214 362" fill="none" stroke="#5a1fb8" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

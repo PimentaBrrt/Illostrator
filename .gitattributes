@@ -1,0 +1,5 @@
+* text=auto eol=lf
+# Applied byte for byte to PhotoCraft's LF sources.
+*.patch -text
+*.png binary
+*.ico binary

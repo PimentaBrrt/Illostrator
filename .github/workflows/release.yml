@@ -1,0 +1,139 @@
+name: Release
+
+# Every Sunday: take the newest VectorCraft, apply the Illostrator layer, test, build and publish a
+# release with Illostrator-windows-x64.exe (the app) and Illostrator-cli-windows-x64.exe (its MCP
+# server). Nothing is published when VectorCraft, the layer and this workflow haven't changed since
+# the last release, or when any step fails (the last release stays the latest).
+
+on:
+  schedule:
+    - cron: "0 6 * * 0" # Sunday 06:00 UTC (03:00 in Brasilia)
+  push:
+    branches: [main]
+    paths: ["layer/**", ".github/workflows/release.yml"]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "VectorCraft branch or commit"
+        default: main
+      skip_tests:
+        description: "Publish without running the tests"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 180
+    env:
+      TARGET: x86_64-pc-windows-msvc
+      GH_TOKEN: ${{ github.token }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Keep the schedule alive
+        # GitHub turns off scheduled workflows in public repos after 60 days without activity.
+        run: |
+          if [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt $(( 45 * 86400 )) ]; then
+            date -u +%F > .github/keepalive
+            git config user.name "github-actions[bot]"
+            git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+            git add .github/keepalive
+            git commit -m "Keep the weekly release schedule alive"
+            git push
+          fi
+
+      - name: Build the Illostrator tree
+        id: tree
+        run: |
+          bash layer/build-tree.sh upstream "${{ inputs.ref || 'main' }}"
+          up=$(git -C upstream rev-parse HEAD~3)
+          # A hash of what goes into the build, layer/ and this workflow: commits that leave both
+          # alone (README, installer) don't make a new release.
+          tag="build-${up:0:9}-$(git rev-parse HEAD:layer HEAD:.github/workflows/release.yml | git hash-object --stdin | cut -c1-7)"
+          echo "upstream=$up" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "fonts=$(sed -n 's/^ *craft-fonts-ref: *\([0-9a-f]*\).*/\1/p' upstream/.github/workflows/release.yml)" >> "$GITHUB_OUTPUT"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists: nothing new to build."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch craft-fonts
+        if: steps.tree.outputs.skip != 'true' && steps.tree.outputs.fonts != ''
+        run: |
+          git init -q craft-fonts
+          git -C craft-fonts fetch -q --depth=1 https://github.com/storytold/craft-fonts.git "${{ steps.tree.outputs.fonts }}"
+          git -C craft-fonts checkout -q FETCH_HEAD
+          # A Windows path: cargo's build scripts can't read Git Bash's /d/a/... form. REQUIRED fails
+          # the build instead of leaving the Japanese, Chinese and Korean fonts out of the app.
+          echo "CRAFT_FONTS_DIR=$(cygpath -w "$PWD/craft-fonts")" >> "$GITHUB_ENV"
+          echo "CRAFT_FONTS_REQUIRED=1" >> "$GITHUB_ENV"
+
+      - name: Rust
+        if: steps.tree.outputs.skip != 'true'
+        run: rustup update stable --no-self-update && rustup default stable
+
+      - uses: Swatinem/rust-cache@v2
+        if: steps.tree.outputs.skip != 'true'
+        with:
+          workspaces: upstream
+          # The cache holds compiled dependencies, not results: a failed run still saves it.
+          cache-on-failure: true
+
+      - name: Test
+        if: steps.tree.outputs.skip != 'true' && !inputs.skip_tests
+        shell: pwsh
+        working-directory: upstream
+        env:
+          # The test profile, not --release: under the release profile's thin LTO every test binary
+          # takes long to link (Loloshop's first run spent 3h50 compiling its tests that way).
+          # Without debug info, as PhotoCraft's Windows CI. Every default workspace member.
+          CARGO_PROFILE_DEV_DEBUG: "0"
+        run: |
+          cargo test --locked
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build
+        if: steps.tree.outputs.skip != 'true'
+        shell: pwsh
+        working-directory: upstream
+        env:
+          # Static C runtime, as VectorCraft's own Windows packages: no VC++ redistributable needed.
+          CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUSTFLAGS: -C target-feature=+crt-static
+          VECTORCRAFT_REQUIRE_WINRES: "1"
+        run: |
+          # vectorcraft-cli is the MCP server the Claude Desktop runs (install/instalar.ps1).
+          cargo build --release --locked -p vectorcraft -p vectorcraft-cli --target $env:TARGET
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Publish
+        if: steps.tree.outputs.skip != 'true'
+        run: |
+          up="${{ steps.tree.outputs.upstream }}"
+          tag="${{ steps.tree.outputs.tag }}"
+          mkdir -p dist
+          cp "upstream/target/$TARGET/release/vectorcraft.exe" dist/Illostrator-windows-x64.exe
+          cp "upstream/target/$TARGET/release/vectorcraft-cli.exe" dist/Illostrator-cli-windows-x64.exe
+          {
+            echo "Illostrator built from VectorCraft [\`${up:0:9}\`](https://github.com/storytold/vectorcraft/commit/$up) and this repository at \`$(git rev-parse --short=7 HEAD)\`."
+            prev=$(gh release view --json tagName -q .tagName 2>/dev/null || true)
+            prev_up=$(echo "$prev" | sed -n 's/^build-\([0-9a-f]*\)-.*/\1/p')
+            if [ -n "$prev_up" ] && [ "$prev_up" != "${up:0:9}" ]; then
+              echo
+              echo "What's new in VectorCraft since the last release: https://github.com/storytold/vectorcraft/compare/$prev_up...$up"
+            fi
+          } > dist/notes.md
+          gh release create "$tag" dist/Illostrator-windows-x64.exe dist/Illostrator-cli-windows-x64.exe \
+            --title "Illostrator $(date -u +%F) (VectorCraft ${up:0:9})" \
+            --notes-file dist/notes.md --latest

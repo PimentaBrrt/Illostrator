@@ -1,0 +1,4 @@
+# The VectorCraft checkout layer/build-tree.sh turns into Illostrator (and its build output).
+/upstream/
+/craft-fonts/
+/dist/
