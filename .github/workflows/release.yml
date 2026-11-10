@@ -71,14 +71,9 @@ jobs:
 
       - name: No update check reaches VectorCraft's releases
         if: steps.tree.outputs.skip != 'true'
-        run: |
-          # Illostrator updates through install/atualizar.ps1: a check of VectorCraft's releases would offer
-          # to replace Illostrator with VectorCraft. Fail when the newest VectorCraft adds one the layer doesn't stub.
-          if grep -rnE '\.check_at_start\(|\.check_now\(|check_for_update\(' upstream/apps upstream/crates --include=*.rs \
-              | grep -v 'CheckResultResponse::CheckAgain => rt.updater.check_now(ctx)'; then
-            echo "::error::VectorCraft checks for updates outside the layer's stub; see the calls above"
-            exit 1
-          fi
+        # Illostrator updates through install/atualizar.ps1: a check of VectorCraft's releases would
+        # offer to replace Illostrator with VectorCraft.
+        run: bash layer/update-guard.sh upstream
 
       - name: Fetch craft-fonts
         if: steps.tree.outputs.skip != 'true' && steps.tree.outputs.fonts != ''
