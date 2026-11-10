@@ -12,7 +12,19 @@ Release. Assim as novidades do VectorCraft chegam sozinhas. É o irmão do
 
 ## Instalar
 
-No PowerShell:
+Baixe e abra o **[instalador do Loloshop e do Illostrator](https://github.com/PimentaBrrt/loloshop/releases/download/instalador/Instalar-Loloshop-e-Illostrator.exe)**. Ele deixa escolher os apps,
+baixa a versão mais nova de cada um, cria os atalhos, liga a atualização automática e conecta ao
+Claude Desktop. Para remover: **Configurações › Apps › Apps instalados › Loloshop e Illostrator**.
+
+O instalador não tem assinatura digital, então o Windows pode desconfiar dele:
+
+- **"O Windows protegeu o computador"** (SmartScreen): clique em **Mais informações** e depois em
+  **Executar assim mesmo**.
+- **"Uma política de Controle de Aplicativo bloqueou este arquivo"** (Controle Inteligente de
+  Aplicativos): o Windows consulta a reputação do arquivo na Microsoft, e às vezes a segunda
+  tentativa já abre. Se continuar bloqueando, use o comando abaixo.
+
+Ou, sem o instalador, no PowerShell:
 
 ```powershell
 irm https://raw.githubusercontent.com/PimentaBrrt/Illostrator/main/install/instalar.ps1 | iex
