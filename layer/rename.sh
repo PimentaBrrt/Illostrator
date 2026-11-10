@@ -17,3 +17,11 @@ grep -rlI "VectorCraft" crates apps --include='*.rs' --include='*.tsv' \
   | grep -v '^crates/engine/src/cmd/fileio/tests_aiimport.rs$' \
   | grep -v '^crates/ui-egui/src/tests/saveext.rs$' \
   | xargs -r sed -i 's/VectorCraft/Illostrator/g'
+
+# The layer's own Portuguese text, appended here rather than in illostrator.patch: VectorCraft adds
+# rows at the end of the catalog almost every week, so a patch hunk there kept conflicting.
+PTBR=crates/ui-egui/src/i18n/pt-br.tsv
+if [ -f "$PTBR" ] && ! grep -q $'^\tBased on Illustrator\t' "$PTBR"; then
+  [ -z "$(tail -c1 "$PTBR")" ] || echo >> "$PTBR"
+  printf '\tBased on Illustrator\tBaseado no Illustrator\n' >> "$PTBR"
+fi
