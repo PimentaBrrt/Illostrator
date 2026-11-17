@@ -1,0 +1,8 @@
+# VectorCraft tests the release workflow skips: ones that fail on Windows because of VectorCraft
+# itself (its CI tests on Linux only), not because of the layer. One test name per line (cargo
+# test's --skip: a name that contains it is skipped), with the reason. Take a line out once
+# VectorCraft fixes the test.
+
+# Added in cd262fa6e (2026-11-11): the package report writes the missing link as `…\art/blue.png`,
+# the test expects Path::join's `…\art\blue.png`.
+a_confined_package_names_files_outside_the_read_root_by_name

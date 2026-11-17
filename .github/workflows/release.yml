@@ -107,12 +107,15 @@ jobs:
           # Without debug info, as PhotoCraft's Windows CI. Every default workspace member.
           CARGO_PROFILE_DEV_DEBUG: "0"
         run: |
-          cargo test --locked
+          # VectorCraft tests that fail on Windows by VectorCraft's own doing, listed with the
+          # reason in layer/skip-tests.txt.
+          $skip = @(Get-Content ..\layer\skip-tests.txt | ForEach-Object { ($_ -replace '#.*', '').Trim() } | Where-Object { $_ } | ForEach-Object { '--skip'; $_ })
+          cargo test --locked --no-fail-fast -- @skip
           if ($LASTEXITCODE -ne 0) {
             # VectorCraft's CI tests on Linux only, and a few of its tests race background threads
             # (placed documents' bitmaps): once more, already built. A real failure fails twice.
             Write-Host "::warning::Tests failed; running them once more"
-            cargo test --locked
+            cargo test --locked --no-fail-fast -- @skip
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
 
