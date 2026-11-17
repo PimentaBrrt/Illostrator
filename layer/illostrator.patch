@@ -737,6 +737,19 @@ index d21ff83ac..bd370668e 100644
      ("help.commandPalette", "Search Commands…", "Cmd+Shift+/", "{}"),
      (
          "help.safeMode",
+diff --git a/crates/ui-egui/src/palette/search.rs b/crates/ui-egui/src/palette/search.rs
+index 6b570f389..cd523a3e5 100644
+--- a/crates/ui-egui/src/palette/search.rs
++++ b/crates/ui-egui/src/palette/search.rs
+@@ -714,7 +714,7 @@ mod tests {
+         let native_home = |id: &str| native.get(id).map(|(path, _)| path.as_str());
+         assert_eq!(native_home("edit.preferences"), Some("Illostrator › Settings"));
+         assert_eq!(native_home("help.about"), Some("Illostrator"));
+-        assert_eq!(native_home("help.discord"), Some("Help"));
++        assert_eq!(native_home("help.discord"), None, "Illostrator has no Discord item");
+         let c = catalog(Lang::EN, false);
+         let of = |id: &str| c.list.iter().find(|e| e.id == id).and_then(|e| e.home.clone());
+         assert_eq!(of("effect:stylize.roundCorners").as_deref(), Some("Effect › Stylize"));
 diff --git a/crates/ui-egui/src/tests/home.rs b/crates/ui-egui/src/tests/home.rs
 index b9a3d5f9f..922a90e25 100644
 --- a/crates/ui-egui/src/tests/home.rs

@@ -6,3 +6,11 @@
 # Added in cd262fa6e (2026-11-11): the package report writes the missing link as `…\art/blue.png`,
 # the test expects Path::join's `…\art\blue.png`.
 a_confined_package_names_files_outside_the_read_root_by_name
+
+# Added 2026-11-15/16, Windows only: the text export writes "\r\n" where the test expects "\n".
+export_selection_to_text_writes_the_selected_type
+# Windows only: the reply keeps "file:" before a hidden path written with escaped backslashes.
+a_reply_hides_a_path_with_escaped_separators
+# Windows only: the report names the folder by its long name (runneradmin), the test by the 8.3
+# short name TEMP holds (RUNNER~1), and with a slash before the file name.
+ui_inspect_script_report_leaves_out_files_outside_the_read_root
