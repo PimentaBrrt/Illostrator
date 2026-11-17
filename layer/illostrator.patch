@@ -1,18 +1,22 @@
 diff --git a/apps/vectorcraft/build.rs b/apps/vectorcraft/build.rs
-index 7925e81c3..1c08f4deb 100644
+index 7925e81c3..c4e70c7e4 100644
 --- a/apps/vectorcraft/build.rs
 +++ b/apps/vectorcraft/build.rs
-@@ -15,8 +15,8 @@ fn main() -> Result<(), String> {
+@@ -15,10 +15,10 @@ fn main() -> Result<(), String> {
      res.set_icon("../../assets/app-icon/vectorcraft.ico")
          .set("ProductName", "Illostrator")
          .set("FileDescription", "Illostrator vector illustration editor")
 -        .set("CompanyName", "Learning Machines LLC")
 -        .set("LegalCopyright", "Copyright (c) the Illostrator authors. MIT OR Apache-2.0.")
+-        .set("OriginalFilename", "vectorcraft.exe")
+-        .set("InternalName", "vectorcraft");
 +        .set("CompanyName", "Illostrator")
 +        .set("LegalCopyright", "Copyright (c) the VectorCraft authors (Illostrator is a modified fork). MIT OR Apache-2.0.")
-         .set("OriginalFilename", "vectorcraft.exe")
-         .set("InternalName", "vectorcraft");
++        .set("OriginalFilename", "Illostrator.exe")
++        .set("InternalName", "Illostrator");
      if let Err(e) = res.compile() {
+         if std::env::var_os("VECTORCRAFT_REQUIRE_WINRES").is_some() {
+             return Err(format!("embedding Windows resources failed: {e}"));
 diff --git a/apps/vectorcraft/src/main.rs b/apps/vectorcraft/src/main.rs
 index b27309e1d..47c38854b 100644
 --- a/apps/vectorcraft/src/main.rs
